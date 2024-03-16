@@ -33,12 +33,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.nNumberOfQuestions = new System.Windows.Forms.NumericUpDown();
+            this.NumberOfQuestions = new System.Windows.Forms.NumericUpDown();
             this.cbLevel = new System.Windows.Forms.ComboBox();
             this.cbOperation = new System.Windows.Forms.ComboBox();
             this.cbTimer = new System.Windows.Forms.ComboBox();
             this.btnStartQuiz = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.nNumberOfQuestions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumberOfQuestions)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -91,23 +91,23 @@
             this.label5.TabIndex = 4;
             this.label5.Text = "Timer:";
             // 
-            // nNumberOfQuestions
+            // NumberOfQuestions
             // 
-            this.nNumberOfQuestions.Location = new System.Drawing.Point(306, 141);
-            this.nNumberOfQuestions.Maximum = new decimal(new int[] {
+            this.NumberOfQuestions.Location = new System.Drawing.Point(306, 141);
+            this.NumberOfQuestions.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
-            this.nNumberOfQuestions.Minimum = new decimal(new int[] {
+            this.NumberOfQuestions.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.nNumberOfQuestions.Name = "nNumberOfQuestions";
-            this.nNumberOfQuestions.Size = new System.Drawing.Size(120, 22);
-            this.nNumberOfQuestions.TabIndex = 5;
-            this.nNumberOfQuestions.Value = new decimal(new int[] {
+            this.NumberOfQuestions.Name = "NumberOfQuestions";
+            this.NumberOfQuestions.Size = new System.Drawing.Size(120, 22);
+            this.NumberOfQuestions.TabIndex = 5;
+            this.NumberOfQuestions.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -174,7 +174,7 @@
             this.Controls.Add(this.cbTimer);
             this.Controls.Add(this.cbOperation);
             this.Controls.Add(this.cbLevel);
-            this.Controls.Add(this.nNumberOfQuestions);
+            this.Controls.Add(this.NumberOfQuestions);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -183,7 +183,7 @@
             this.Name = "frmMainMenue";
             this.Text = "Main Menue";
             this.Load += new System.EventHandler(this.frmMainMenue_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.nNumberOfQuestions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumberOfQuestions)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,7 +196,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown nNumberOfQuestions;
+        private System.Windows.Forms.NumericUpDown NumberOfQuestions;
         private System.Windows.Forms.ComboBox cbLevel;
         private System.Windows.Forms.ComboBox cbOperation;
         private System.Windows.Forms.ComboBox cbTimer;
