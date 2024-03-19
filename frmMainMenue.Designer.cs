@@ -160,7 +160,7 @@
             this.btnStartQuiz.Location = new System.Drawing.Point(306, 375);
             this.btnStartQuiz.Name = "btnStartQuiz";
             this.btnStartQuiz.Size = new System.Drawing.Size(120, 63);
-            this.btnStartQuiz.TabIndex = 9;
+            this.btnStartQuiz.TabIndex = 0;
             this.btnStartQuiz.Text = "Start Quiz";
             this.btnStartQuiz.UseVisualStyleBackColor = true;
             this.btnStartQuiz.Click += new System.EventHandler(this.btnStartQuiz_Click);

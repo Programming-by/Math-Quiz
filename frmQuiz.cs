@@ -9,17 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Math_Quiz.frmQuiz;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace Math_Quiz
 {
     /*
-     Wrap group box on each 4 group boxes
-
-
-     background green for correct answer
-     background red for wrong answer
-     background white for the unanswered correct answer
-
+     Wrap group box on each 6 group boxes
+     Compare Answers
      */
     public partial class frmQuiz : Form
     {
@@ -36,7 +32,7 @@ namespace Math_Quiz
             public string OperationSymbol;
             public string Timer;
             public double CorrectAnswer;
-            public double PlayerAnswer;
+            public double UserAnswer;
         }
         stQuestionInfo _QuestionInfo;
 
@@ -115,7 +111,6 @@ namespace Math_Quiz
 
         private string GetOption(List<double> shuffled, RadioButton rbOption)
         {
-
             foreach (var item in shuffled)
             {
                 if (rbOption.Text == "")
@@ -124,8 +119,6 @@ namespace Math_Quiz
                     shuffled.Remove(item);
                     return rbOption.Text;
                 }
-                
-               
             }
             return "";
         }
@@ -138,7 +131,6 @@ namespace Math_Quiz
                     _QuestionInfo.Number1 = random.Next(1, 10).ToString();
                     _QuestionInfo.Number2 = random.Next(1, 10).ToString();
                     _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2));
-                    
                     break;
 
                 case "Medium":
@@ -162,7 +154,6 @@ namespace Math_Quiz
 
             
         }
-
         private string GetRandomOperation()
         {
           int n =  random.Next(1, 5);
@@ -184,22 +175,16 @@ namespace Math_Quiz
             switch (_QuestionInfo.Operation)
             {
                 case "Addition":
-                   // lblOperation.Text =  "+";
                     return  "+";
 
                 case "Subtraction":
-                    // lblOperation.Text = "-";
                     return "-";
 
                 case "Multiplication":
-                    //  lblOperation.Text = "*";
                     return "*";
 
                 case "Division":
-                    // lblOperation.Text = "/";
-
                     return "/";
-                    ;
                 case "Mixed":
                    return GetRandomOperation();
                 default:
@@ -207,26 +192,6 @@ namespace Math_Quiz
             }
 
         }
-        private void btnGoBackToReturnMenue_Click(object sender, EventArgs e)
-        {
-            _frmMainMenu.Show();
-            this.Close();
-        }
-        private void btnFinishQuiz_Click(object sender, EventArgs e)
-        {
-            if(MessageBox.Show("Are you sure you want to finish the quiz?","Confirm",MessageBoxButtons.OKCancel,MessageBoxIcon.Question) == DialogResult.Cancel)
-                return;
-
-            lblResultLabel.Visible = true;
-            lblResult.Visible = true;
-            lblResult.Text = "0/" + _QuestionInfo.NumberOfQuestions;
-            QuizTimer.Stop();
-            MessageBox.Show("Great! you got 16/20,Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
-      
-         
-        
-        }
-
         private void GetQuizTime()
         {
             switch (_QuestionInfo.Timer)
@@ -277,121 +242,135 @@ namespace Math_Quiz
                 MessageBox.Show("Times Up", "Times Up", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
-        
+  
+        private void AddControlsToFlowLayoutPanel(int i)
+        {
+            GroupBox groupBox = new GroupBox();
+            groupBox.Name = "gbQuestionInfo" + i;
+            groupBox.Text = "Q0" + i;
+            groupBox.Height = 200;
+            groupBox.Width = 250;
+
+
+            Label Number1 = new Label();
+            Number1.Name = "lblNumber1";
+            Number1.Width = 10;
+            Number1.Text = "";
+            Number1.Location = new Point(120, 50);
+
+
+            Label Operation = new Label();
+            Operation.Name = "lblOperation";
+            Operation.Text = "";
+            Operation.Width = 10;
+            Operation.Location = new Point(140, 50);
+
+            Label Number2 = new Label();
+            Number2.Name = "lblNumber2";
+            Number2.Width = 10;
+            Number2.Text = "";
+            Number2.Location = new Point(160, 50);
+
+            Label Equality = new Label();
+            Equality.Name = "lblEquality";
+            Equality.Text = "=";
+            Equality.Width = 10;
+            Equality.Location = new Point(180, 50);
+
+
+            GenerateQuestion();
+            var options = GenerateQuestionOptions();
+            var shuffled = ShuffleList(options);
+
+
+            Number1.Text = _QuestionInfo.Number1;
+            Number2.Text = _QuestionInfo.Number2;
+            Operation.Text = _QuestionInfo.OperationSymbol;
+
+
+            RadioButton Option1 = new RadioButton();
+            Option1.Name = "rb1";
+            Option1.Height = 20;
+            Option1.Width = 50;
+            Option1.Location = new Point(10, 70);
+            Option1.Text = GetOption(shuffled, Option1);
+
+
+
+            RadioButton Option2 = new RadioButton();
+            Option2.Name = "rb2";
+            Option2.Text = "";
+            Option2.Height = 20;
+            Option2.Width = 50;
+            Option2.Location = new Point(10, 100);
+            Option2.Text = GetOption(shuffled, Option2);
+
+
+
+            RadioButton Option3 = new RadioButton();
+            Option3.Name = "rb3";
+            Option3.Text = "";
+            Option3.Height = 20;
+            Option3.Width = 50;
+            Option3.Location = new Point(10, 130);
+            Option3.Text = GetOption(shuffled, Option3);
+
+            RadioButton Option4 = new RadioButton();
+            Option4.Name = "rb4";
+            Option4.Text = "";
+            Option4.Height = 20;
+            Option4.Width = 50;
+            Option4.Location = new Point(10, 160);
+            Option4.Text = GetOption(shuffled, Option4);
+
+
+            groupBox.Controls.Add(Number1);
+            groupBox.Controls.Add(Operation);
+            groupBox.Controls.Add(Number2);
+            groupBox.Controls.Add(Equality);
+
+            groupBox.Controls.Add(Option1);
+            groupBox.Controls.Add(Option2);
+            groupBox.Controls.Add(Option3);
+            groupBox.Controls.Add(Option4);
+
+            flowLayoutPanel1.Controls.Add(groupBox);
+        }
         private void GenerateDynamicQuestions()
         {
-            int GroupBoxCount = 0;
             for (int i = 1; i <= _QuestionInfo.NumberOfQuestions; i++)
             {
-                GroupBoxCount++;
-
-                GroupBox groupBox = new GroupBox();
-                groupBox.Name = "gbQuestionInfo" + i;
-                groupBox.Text = "Q0" + i;
-                groupBox.Height = 200;
-                groupBox.Width = 300;
-
-
-                Label Number1 = new Label();
-                Number1.Name = "lblNumber1";
-                Number1.Width = 10;
-                Number1.Text = "";
-                Number1.Location = new Point(120,50);
-
-                Label Operation = new Label();
-                Operation.Name = "lblOperation";
-                Operation.Text = "";
-                Operation.Width = 10;
-                Operation.Location = new Point(140, 50);
-
-                Label Number2 = new Label();
-                Number2.Name = "lblNumber2";
-                Number2.Width = 10;
-                Number2.Text = "";
-                Number2.Location = new Point(160, 50);
-
-                Label Equality = new Label();
-                Equality.Name = "lblEquality";
-                Equality.Text = "=";
-                Equality.Width = 10;
-                Equality.Location = new Point(180, 50);
-
-
-                GenerateQuestion();
-                var options = GenerateQuestionOptions();
-                var shuffled = ShuffleList(options);
-
-
-                Number1.Text = _QuestionInfo.Number1;
-                Number2.Text = _QuestionInfo.Number2;
-                Operation.Text = _QuestionInfo.OperationSymbol;
-
-
-                RadioButton Option1 = new RadioButton();
-                Option1.Name = "rb1";
-                Option1.Height = 20;
-                Option1.Width = 50;
-                Option1.Location = new Point(10, 70);
-                Option1.Text = GetOption(shuffled,Option1);
-
-
-
-                RadioButton Option2 = new RadioButton();
-                Option2.Name = "rb2";
-                Option2.Text = "";
-                Option2.Height = 20;
-                Option2.Width = 50;
-                Option2.Location = new Point(10, 100);
-                Option2.Text = GetOption(shuffled, Option2);
-
-
-
-                RadioButton Option3 = new RadioButton();
-                Option3.Name = "rb3";
-                Option3.Text = "";
-                Option3.Height = 20;
-                Option3.Width = 50;
-                Option3.Location = new Point(10, 130);
-                Option3.Text = GetOption(shuffled, Option3);
-
-                RadioButton Option4 = new RadioButton();
-                Option4.Name = "rb4";
-                Option4.Text = "";
-                Option4.Height = 20;
-                Option4.Width = 50;
-                Option4.Location = new Point(10, 160);
-                Option4.Text = GetOption(shuffled, Option4);
-
-
-                groupBox.Controls.Add(Number1);
-                groupBox.Controls.Add(Operation);
-                groupBox.Controls.Add(Number2);
-                groupBox.Controls.Add(Equality);
-
-                groupBox.Controls.Add(Option1);
-                groupBox.Controls.Add(Option2);
-                groupBox.Controls.Add(Option3);
-                groupBox.Controls.Add(Option4);
-
-
-                flowLayoutPanel1.Controls.Add(groupBox);
-                if (GroupBoxCount % 5 == 0)
-                {
-                    flowLayoutPanel1.SetFlowBreak(groupBox, true);
-                   // flowLayoutPanel1.AutoScroll = true;
-                }
+                AddControlsToFlowLayoutPanel(i);
             }
-
         }
-
         private void frmQuiz_Load(object sender, EventArgs e)
         {
-
             GenerateDynamicQuestions();
 
             GetQuizTime();
 
             QuizTimer.Start();
+        }
+        private void btnGoBackToReturnMenue_Click(object sender, EventArgs e)
+        {
+            _frmMainMenu.Show();
+            this.Close();
+        }
+        private void btnFinishQuiz_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("Are you sure you want to finish the quiz?","Confirm",MessageBoxButtons.OKCancel,MessageBoxIcon.Question) == DialogResult.Cancel)
+                return;
+
+            lblResultLabel.Visible = true;
+            lblResult.Visible = true;
+            lblResult.Text = "0/" + _QuestionInfo.NumberOfQuestions;
+            QuizTimer.Stop();
+
+
+            MessageBox.Show("Great! you got 16/20,Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
+      
+          
+        
         }
 
     }
