@@ -193,22 +193,18 @@ namespace Math_Quiz
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            --_Seconds;
-            if (_Seconds <= 10)
-            {
-                lblTimer.ForeColor = Color.Red;
-            }
-            if (_Seconds >= 0)
-            {
-                TimeSpan time = TimeSpan.FromSeconds(_Seconds);
-                string str = time.ToString(@"hh\:mm\:ss");
-                lblTimer.Text = str;
-                lblTimer.Refresh();
-            } else
+            if (_Seconds <= 0)
             {
                 QuizTimer.Stop();
                 MessageBox.Show("Times Up", "Times Up", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
+            }else
+            --_Seconds;
+   
+               lblTimer.ForeColor = (_Seconds <= 10) ? Color.Red : SystemColors.ControlText;  
+
+                TimeSpan time = TimeSpan.FromSeconds(_Seconds);
+                lblTimer.Text = time.ToString(@"hh\:mm\:ss");
+                lblTimer.Refresh();
         }
         private void CalculateMarkAndChangeBackground(List<RadioButton> PossibleAnswers)
         {
