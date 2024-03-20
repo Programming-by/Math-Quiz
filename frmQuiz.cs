@@ -14,11 +14,12 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 namespace Math_Quiz
 {
     /*
-     Wrap group box on each 6 group boxes
-     Compare Answers
+     Prevent Number1 and Number2 duplicates
      */
     public partial class frmQuiz : Form
     {
+        List<RadioButton> PossibleAnswers = new List<RadioButton>();
+
         private Form _frmMainMenu;
 
         public static Random random = new Random();
@@ -29,53 +30,46 @@ namespace Math_Quiz
             public string Number1;
             public string Number2;
             public string Operation;
-            public string OperationSymbol;
+            public string OpType;
             public string Timer;
             public double CorrectAnswer;
             public double UserAnswer;
+            public int QuizMark;
         }
         stQuestionInfo _QuestionInfo;
 
         private float _Seconds = 0;
-
-
         public frmQuiz(Form frmMainMenu, frmMainMenue.stQuestionData QuestionData)
         {
             InitializeComponent();
             _frmMainMenu = frmMainMenu;
-
             _QuestionInfo.NumberOfQuestions = QuestionData.NumberOfQuestions;
             _QuestionInfo.QuestionLevel = QuestionData.QuestionLevel;
             _QuestionInfo.Operation = QuestionData.Operation;
             _QuestionInfo.Timer = QuestionData.Timer;
         }
-       
-        private double GetCorrectAnswer(double Number1 , double Number2) 
+
+        private double GetCorrectAnswer(double Number1, double Number2,string OpType)
         {
-            switch (_QuestionInfo.Operation)
+            switch (OpType)
             {
-                case "Addition":
+                case "+":
                     return Number1 + Number2;
-                case "Subtraction":
+                case "-":
                     return Number1 - Number2;
-                case "Multiplication":
+                case "*":
                     return Number1 * Number2;
 
-                case "Division":
+                case "/":
                     return Number1 / Number2;
-                case "Mixed":
-                    return Number1 + Number2;
 
                 default:
                     return Number1 + Number2;
             }
-
-
         }
-
         private List<double> ShuffleList(List<double> options)
         {
-           //var shuffledList = options.OrderBy(x => Guid.NewGuid()).ToList();
+            //var shuffledList = options.OrderBy(x => Guid.NewGuid()).ToList();
             var shuffledList = options.OrderBy(x => random.Next()).ToList();
             return shuffledList;
         }
@@ -91,8 +85,7 @@ namespace Math_Quiz
 
                 if (options.Contains(NumberGenerated))
                 {
-                    NumberGenerated = random.Next(1, (int)_QuestionInfo.CorrectAnswer);
-                   
+                    continue;
                 } else
                 {
                     options.Add(NumberGenerated);
@@ -102,13 +95,9 @@ namespace Math_Quiz
                 {
                     break;
                 }
-
             }
-
             return options;
-
-         }
-
+        }
         private string GetOption(List<double> shuffled, RadioButton rbOption)
         {
             foreach (var item in shuffled)
@@ -117,46 +106,53 @@ namespace Math_Quiz
                 {
                     rbOption.Text = item.ToString();
                     shuffled.Remove(item);
+                   
+                    if (item == _QuestionInfo.CorrectAnswer)
+                    {
+                        rbOption.Tag = "C";
+                    }
                     return rbOption.Text;
                 }
             }
             return "";
         }
-
         private void GenerateQuestion()
         {
-            switch(_QuestionInfo.QuestionLevel)
+            switch (_QuestionInfo.QuestionLevel)
             {
                 case "Easy":
                     _QuestionInfo.Number1 = random.Next(1, 10).ToString();
                     _QuestionInfo.Number2 = random.Next(1, 10).ToString();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2));
+                    _QuestionInfo.OpType = GenerateOperation();
+                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
+                    //if (IsDuplicateQuestion(_QuestionInfo.Number1, _QuestionInfo.Number2, _QuestionInfo.OpType))
+                    //{ 
+                    //};
                     break;
 
                 case "Medium":
                     _QuestionInfo.Number1 = random.Next(10, 50).ToString();
                     _QuestionInfo.Number2 = random.Next(10, 50).ToString();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2));
+                    _QuestionInfo.OpType = GenerateOperation();
+                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
                     break;
                 case "Hard":
                     _QuestionInfo.Number1 = random.Next(50, 100).ToString();
                     _QuestionInfo.Number2 = random.Next(50, 100).ToString();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2));
+                    _QuestionInfo.OpType = GenerateOperation();
+                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
                     break;
                 case "Mixed":
                     _QuestionInfo.Number1 = random.Next(1, 100).ToString();
                     _QuestionInfo.Number2 = random.Next(1, 100).ToString();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2));
+                    _QuestionInfo.OpType = GenerateOperation();
+                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
                     break;
-
             }
-            _QuestionInfo.OperationSymbol = GenerateOperation();
-
-            
         }
         private string GetRandomOperation()
         {
-          int n =  random.Next(1, 5);
+            int n = random.Next(1, 5);
 
             if (n == 1)
                 return "+";
@@ -166,27 +162,22 @@ namespace Math_Quiz
                 return "*";
             if (n == 4)
                 return "/";
-
             return "+";
-
         }
         private string GenerateOperation()
         {
             switch (_QuestionInfo.Operation)
             {
                 case "Addition":
-                    return  "+";
-
+                    return "+";
                 case "Subtraction":
                     return "-";
-
                 case "Multiplication":
                     return "*";
-
                 case "Division":
                     return "/";
                 case "Mixed":
-                   return GetRandomOperation();
+                    return GetRandomOperation();
                 default:
                     return "+";
             }
@@ -204,45 +195,58 @@ namespace Math_Quiz
                     break;
                 case "5:00":
                     _Seconds = 300;
-
                     break;
                 case "10:00":
                     _Seconds = 600;
-
                     break;
                 case "15:00":
                     _Seconds = 900;
-
                     break;
                 case "30:00":
                     _Seconds = 1800;
-
                     break;
             }
-
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
             --_Seconds;
-
             if (_Seconds <= 10)
             {
                 lblTimer.ForeColor = Color.Red;
             }
-
             if (_Seconds >= 0)
             {
-            TimeSpan time = TimeSpan.FromSeconds(_Seconds);
-            string str = time.ToString(@"hh\:mm\:ss");
-            lblTimer.Text = str;
-            lblTimer.Refresh();
+                TimeSpan time = TimeSpan.FromSeconds(_Seconds);
+                string str = time.ToString(@"hh\:mm\:ss");
+                lblTimer.Text = str;
+                lblTimer.Refresh();
             } else
             {
                 QuizTimer.Stop();
                 MessageBox.Show("Times Up", "Times Up", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
-  
+       
+        private void CompareAnswers(List<RadioButton> PossibleAnswers)
+        {
+            foreach (var item in PossibleAnswers)
+            {
+                if (item.Tag == "C" && item.Checked)
+                {
+                    _QuestionInfo.QuizMark++;
+                }
+                if (item.Tag == "C")
+                {
+                    item.BackColor = Color.Green;
+                }
+
+                if (item.Tag != "C" && item.Checked)
+                {
+                    item.BackColor = Color.Red;
+                }
+            }
+
+        }
         private void AddControlsToFlowLayoutPanel(int i)
         {
             GroupBox groupBox = new GroupBox();
@@ -251,13 +255,11 @@ namespace Math_Quiz
             groupBox.Height = 200;
             groupBox.Width = 250;
 
-
             Label Number1 = new Label();
             Number1.Name = "lblNumber1";
             Number1.Width = 10;
             Number1.Text = "";
             Number1.Location = new Point(120, 50);
-
 
             Label Operation = new Label();
             Operation.Name = "lblOperation";
@@ -277,16 +279,13 @@ namespace Math_Quiz
             Equality.Width = 10;
             Equality.Location = new Point(180, 50);
 
-
             GenerateQuestion();
             var options = GenerateQuestionOptions();
             var shuffled = ShuffleList(options);
 
-
             Number1.Text = _QuestionInfo.Number1;
             Number2.Text = _QuestionInfo.Number2;
-            Operation.Text = _QuestionInfo.OperationSymbol;
-
+            Operation.Text = _QuestionInfo.OpType;
 
             RadioButton Option1 = new RadioButton();
             Option1.Name = "rb1";
@@ -295,8 +294,6 @@ namespace Math_Quiz
             Option1.Location = new Point(10, 70);
             Option1.Text = GetOption(shuffled, Option1);
 
-
-
             RadioButton Option2 = new RadioButton();
             Option2.Name = "rb2";
             Option2.Text = "";
@@ -304,8 +301,6 @@ namespace Math_Quiz
             Option2.Width = 50;
             Option2.Location = new Point(10, 100);
             Option2.Text = GetOption(shuffled, Option2);
-
-
 
             RadioButton Option3 = new RadioButton();
             Option3.Name = "rb3";
@@ -322,6 +317,11 @@ namespace Math_Quiz
             Option4.Width = 50;
             Option4.Location = new Point(10, 160);
             Option4.Text = GetOption(shuffled, Option4);
+
+            PossibleAnswers.Add(Option1);
+            PossibleAnswers.Add(Option2);
+            PossibleAnswers.Add(Option3);
+            PossibleAnswers.Add(Option4);
 
 
             groupBox.Controls.Add(Number1);
@@ -342,6 +342,7 @@ namespace Math_Quiz
             {
                 AddControlsToFlowLayoutPanel(i);
             }
+
         }
         private void frmQuiz_Load(object sender, EventArgs e)
         {
@@ -353,6 +354,7 @@ namespace Math_Quiz
         }
         private void btnGoBackToReturnMenue_Click(object sender, EventArgs e)
         {
+            QuizTimer.Stop();
             _frmMainMenu.Show();
             this.Close();
         }
@@ -363,15 +365,10 @@ namespace Math_Quiz
 
             lblResultLabel.Visible = true;
             lblResult.Visible = true;
-            lblResult.Text = "0/" + _QuestionInfo.NumberOfQuestions;
             QuizTimer.Stop();
-
-
-            MessageBox.Show("Great! you got 16/20,Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
-      
-          
-        
+            CompareAnswers(PossibleAnswers);
+            lblResult.Text = $"{_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions}";
+            MessageBox.Show($"Great! you got {_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions},Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
     }
 }

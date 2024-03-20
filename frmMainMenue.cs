@@ -48,9 +48,6 @@ namespace Math_Quiz
         {
             QuestionData = ReadQuestionInfo();
 
-
-
-
             this.Hide();
             frmQuiz frmQuiz = new frmQuiz(this , QuestionData);
 

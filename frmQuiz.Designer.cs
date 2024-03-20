@@ -52,7 +52,7 @@
             // 
             // btnGoBackToReturnMenue
             // 
-            this.btnGoBackToReturnMenue.Location = new System.Drawing.Point(794, 599);
+            this.btnGoBackToReturnMenue.Location = new System.Drawing.Point(926, 541);
             this.btnGoBackToReturnMenue.Name = "btnGoBackToReturnMenue";
             this.btnGoBackToReturnMenue.Size = new System.Drawing.Size(147, 63);
             this.btnGoBackToReturnMenue.TabIndex = 11;
@@ -90,7 +90,7 @@
             // 
             this.lblResultLabel.AutoSize = true;
             this.lblResultLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblResultLabel.Location = new System.Drawing.Point(1031, 85);
+            this.lblResultLabel.Location = new System.Drawing.Point(853, 85);
             this.lblResultLabel.Name = "lblResultLabel";
             this.lblResultLabel.Size = new System.Drawing.Size(113, 20);
             this.lblResultLabel.TabIndex = 14;
@@ -101,7 +101,7 @@
             // 
             this.lblResult.AutoSize = true;
             this.lblResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblResult.Location = new System.Drawing.Point(1167, 85);
+            this.lblResult.Location = new System.Drawing.Point(1000, 85);
             this.lblResult.Name = "lblResult";
             this.lblResult.Size = new System.Drawing.Size(45, 20);
             this.lblResult.TabIndex = 15;
@@ -129,7 +129,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1316, 820);
+            this.ClientSize = new System.Drawing.Size(1097, 820);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.lblResult);
