@@ -112,7 +112,6 @@ namespace Math_Quiz
             }
             return "";
         }
-
         private void GenerateQuestion()
         {
             switch (_QuestionInfo.QuestionLevel)
@@ -143,17 +142,11 @@ namespace Math_Quiz
         }
         private string GetRandomOperation()
         {
-            int n = random.Next(1, 5);
+            string[] operations = { "+","-","*","/"};
 
-            if (n == 1)
-                return "+";
-            if (n == 2)
-                return "-";
-            if (n == 3)
-                return "*";
-            if (n == 4)
-                return "/";
-            return "+";
+            int n = random.Next(operations.Length);
+
+            return operations[n];   
         }
         private string GenerateOperation()
         {
