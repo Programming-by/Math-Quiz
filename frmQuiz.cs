@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static Math_Quiz.frmQuiz;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace Math_Quiz
 {
-    /*
-     Prevent Number1 and Number2 duplicates
-     */
     public partial class frmQuiz : Form
     {
         List<RadioButton> PossibleAnswers = new List<RadioButton>();
@@ -121,36 +112,34 @@ namespace Math_Quiz
             }
             return "";
         }
+
         private void GenerateQuestion()
         {
             switch (_QuestionInfo.QuestionLevel)
             {
                 case "Easy":
-                    _QuestionInfo.Number1 = random.Next(1, 10).ToString();
-                    _QuestionInfo.Number2 = random.Next(1, 10).ToString();
-                    _QuestionInfo.OpType = GenerateOperation();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
+                    GenerateQuestion(1, 10);
                     break;
 
                 case "Medium":
-                    _QuestionInfo.Number1 = random.Next(10, 50).ToString();
-                    _QuestionInfo.Number2 = random.Next(10, 50).ToString();
-                    _QuestionInfo.OpType = GenerateOperation();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
+                    GenerateQuestion(10, 50);
+
                     break;
                 case "Hard":
-                    _QuestionInfo.Number1 = random.Next(50, 100).ToString();
-                    _QuestionInfo.Number2 = random.Next(50, 100).ToString();
-                    _QuestionInfo.OpType = GenerateOperation();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
+                    GenerateQuestion(50, 100);
+
                     break;
                 case "Mixed":
-                    _QuestionInfo.Number1 = random.Next(1, 100).ToString();
-                    _QuestionInfo.Number2 = random.Next(1, 100).ToString();
-                    _QuestionInfo.OpType = GenerateOperation();
-                    _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
+                    GenerateQuestion(1,100);
                     break;
             }
+        }
+        private void GenerateQuestion(int min , int max)
+        {
+         _QuestionInfo.Number1 = random.Next(min, max).ToString();
+         _QuestionInfo.Number2 = random.Next(min, max).ToString();
+         _QuestionInfo.OpType = GenerateOperation();
+         _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
         }
         private string GetRandomOperation()
         {
@@ -281,13 +270,14 @@ namespace Math_Quiz
             Equality.Location = new Point(180, 50);
 
             GenerateQuestion();
+
             var options = GenerateQuestionOptions();
             var shuffled = ShuffleList(options);
 
             Number1.Text = _QuestionInfo.Number1;
             Number2.Text = _QuestionInfo.Number2;
             Operation.Text = _QuestionInfo.OpType;
-
+          
             RadioButton Option1 = new RadioButton();
             Option1.Name = "rb1";
             Option1.Height = 20;
@@ -341,17 +331,16 @@ namespace Math_Quiz
         {
             for (int i = 1; i <= _QuestionInfo.NumberOfQuestions; i++)
             {
-                AddControlsToFlowLayoutPanel(i);
+                AddControlsToFlowLayoutPanel(4);
             }
-
         }
         private void frmQuiz_Load(object sender, EventArgs e)
         {
             GenerateDynamicQuestions();
 
-            GetQuizTime();
+           GetQuizTime();
 
-            QuizTimer.Start();
+           QuizTimer.Start();
         }
         private void btnGoBackToReturnMenue_Click(object sender, EventArgs e)
         {
@@ -371,5 +360,6 @@ namespace Math_Quiz
             lblResult.Text = $"{_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions}";
             MessageBox.Show($"you got {_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions},Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
     }
 }
