@@ -33,7 +33,6 @@ namespace Math_Quiz
             public string OpType;
             public string Timer;
             public double CorrectAnswer;
-            public double UserAnswer;
             public int QuizMark;
         }
         stQuestionInfo _QuestionInfo;
@@ -81,8 +80,14 @@ namespace Math_Quiz
             options.Add(_QuestionInfo.CorrectAnswer);
             while (true)
             {
+                if (_QuestionInfo.CorrectAnswer <= 0)
+                {
+                    NumberGenerated = random.Next(-30, (int)_QuestionInfo.CorrectAnswer);
+
+                } else 
                 NumberGenerated = random.Next(1, (int)_QuestionInfo.CorrectAnswer);
 
+            
                 if (options.Contains(NumberGenerated))
                 {
                     continue;
@@ -125,9 +130,6 @@ namespace Math_Quiz
                     _QuestionInfo.Number2 = random.Next(1, 10).ToString();
                     _QuestionInfo.OpType = GenerateOperation();
                     _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
-                    //if (IsDuplicateQuestion(_QuestionInfo.Number1, _QuestionInfo.Number2, _QuestionInfo.OpType))
-                    //{ 
-                    //};
                     break;
 
                 case "Medium":
@@ -226,21 +228,20 @@ namespace Math_Quiz
                 MessageBox.Show("Times Up", "Times Up", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
-       
-        private void CompareAnswers(List<RadioButton> PossibleAnswers)
+        private void CalculateMarkAndChangeBackground(List<RadioButton> PossibleAnswers)
         {
             foreach (var item in PossibleAnswers)
             {
-                if (item.Tag == "C" && item.Checked)
-                {
-                    _QuestionInfo.QuizMark++;
-                }
-                if (item.Tag == "C")
+                if (item.Tag?.ToString() == "C")
                 {
                     item.BackColor = Color.Green;
+                    if (item.Checked)
+                    {
+                        _QuestionInfo.QuizMark++;
+                    }
                 }
 
-                if (item.Tag != "C" && item.Checked)
+                if (item.Tag?.ToString() != "C" && item.Checked)
                 {
                     item.BackColor = Color.Red;
                 }
@@ -257,7 +258,7 @@ namespace Math_Quiz
 
             Label Number1 = new Label();
             Number1.Name = "lblNumber1";
-            Number1.Width = 10;
+            Number1.Width = 20;
             Number1.Text = "";
             Number1.Location = new Point(120, 50);
 
@@ -269,7 +270,7 @@ namespace Math_Quiz
 
             Label Number2 = new Label();
             Number2.Name = "lblNumber2";
-            Number2.Width = 10;
+            Number2.Width = 20;
             Number2.Text = "";
             Number2.Location = new Point(160, 50);
 
@@ -366,9 +367,9 @@ namespace Math_Quiz
             lblResultLabel.Visible = true;
             lblResult.Visible = true;
             QuizTimer.Stop();
-            CompareAnswers(PossibleAnswers);
+            CalculateMarkAndChangeBackground(PossibleAnswers);
             lblResult.Text = $"{_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions}";
-            MessageBox.Show($"Great! you got {_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions},Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"you got {_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions},Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
