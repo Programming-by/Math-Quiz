@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 
 namespace Math_Quiz
@@ -89,7 +90,7 @@ namespace Math_Quiz
         }
         private string GetOption(List<int> shuffled, RadioButton rbOption)
         {
-            if (shuffled.Count > 0 && rbOption.Text == "")
+            if (shuffled.Count > 0)
             {
                 int item = shuffled[0];
                 rbOption.Text = item.ToString();
@@ -215,94 +216,80 @@ namespace Math_Quiz
             }
 
         }
+      
+        private GroupBox CreateGroupBox(int i)
+        {
+            GroupBox groupBox = new GroupBox
+            {
+                Name = "gbQuestionInfo" + i,
+                Text = "Q0" + i,
+                Height = 220,
+                Width = 250
+            };
+        return groupBox;
+        }
+        private void AddLabelsAndRadioButtons(GroupBox groupBox,List<int> shuffled)
+        {
+            Label Number1 = new Label
+            {
+             Name = "lblNumber1",
+             Width = 20,
+             Text = _QuestionInfo.Number1,
+             Location = new Point(120, 50)
+           };
+
+            Label Operation = new Label
+            {
+              Name = "lblOperation",
+              Text = _QuestionInfo.OpType,
+              Width = 10,
+              Location = new Point(140, 50)
+            };
+
+            Label Number2 = new Label
+            {
+                Name = "lblNumber2",
+                Width = 20,
+                Text = _QuestionInfo.Number2,
+                Location = new Point(160, 50)
+            };
+
+            Label Equality = new Label
+            {
+                Name = "lblEquality",
+                Text = "=",
+                Width = 10,
+                Location = new Point(180, 50)
+            };
+
+            var labels = new[] { Number1,Operation,Number2,Equality };
+
+            groupBox.Controls.AddRange(labels);
+
+            for (int i = 1;i <= 4; i++)
+            {
+                RadioButton Option = new RadioButton
+                {
+                    Name = "rbOption" + i,
+                    Height = 20,
+                    Width = 50,
+                    Location = new Point(10, 70 + i * 30)
+
+                };
+                Text = GetOption(shuffled, Option);
+                groupBox.Controls.Add(Option);
+                PossibleAnswers.Add(Option);
+            }
+        }
         private void AddControlsToFlowLayoutPanel(int i)
         {
-            GroupBox groupBox = new GroupBox();
-            groupBox.Name = "gbQuestionInfo" + i;
-            groupBox.Text = "Q0" + i;
-            groupBox.Height = 200;
-            groupBox.Width = 250;
-
-            Label Number1 = new Label();
-            Number1.Name = "lblNumber1";
-            Number1.Width = 20;
-            Number1.Text = "";
-            Number1.Location = new Point(120, 50);
-
-            Label Operation = new Label();
-            Operation.Name = "lblOperation";
-            Operation.Text = "";
-            Operation.Width = 10;
-            Operation.Location = new Point(140, 50);
-
-            Label Number2 = new Label();
-            Number2.Name = "lblNumber2";
-            Number2.Width = 20;
-            Number2.Text = "";
-            Number2.Location = new Point(160, 50);
-
-            Label Equality = new Label();
-            Equality.Name = "lblEquality";
-            Equality.Text = "=";
-            Equality.Width = 10;
-            Equality.Location = new Point(180, 50);
-
+            GroupBox groupBox = CreateGroupBox(i);
+        
             GenerateQuestion();
 
             var options = GenerateQuestionOptions();
             var shuffled = ShuffleList(options);
-
-            Number1.Text = _QuestionInfo.Number1;
-            Number2.Text = _QuestionInfo.Number2;
-            Operation.Text = _QuestionInfo.OpType;
-          
-            RadioButton Option1 = new RadioButton();
-            Option1.Name = "rb1";
-            Option1.Height = 20;
-            Option1.Width = 50;
-            Option1.Location = new Point(10, 70);
-            Option1.Text = GetOption(shuffled, Option1);
-
-            RadioButton Option2 = new RadioButton();
-            Option2.Name = "rb2";
-            Option2.Text = "";
-            Option2.Height = 20;
-            Option2.Width = 50;
-            Option2.Location = new Point(10, 100);
-            Option2.Text = GetOption(shuffled, Option2);
-
-            RadioButton Option3 = new RadioButton();
-            Option3.Name = "rb3";
-            Option3.Text = "";
-            Option3.Height = 20;
-            Option3.Width = 50;
-            Option3.Location = new Point(10, 130);
-            Option3.Text = GetOption(shuffled, Option3);
-
-            RadioButton Option4 = new RadioButton();
-            Option4.Name = "rb4";
-            Option4.Text = "";
-            Option4.Height = 20;
-            Option4.Width = 50;
-            Option4.Location = new Point(10, 160);
-            Option4.Text = GetOption(shuffled, Option4);
-
-            PossibleAnswers.Add(Option1);
-            PossibleAnswers.Add(Option2);
-            PossibleAnswers.Add(Option3);
-            PossibleAnswers.Add(Option4);
-
-
-            groupBox.Controls.Add(Number1);
-            groupBox.Controls.Add(Operation);
-            groupBox.Controls.Add(Number2);
-            groupBox.Controls.Add(Equality);
-
-            groupBox.Controls.Add(Option1);
-            groupBox.Controls.Add(Option2);
-            groupBox.Controls.Add(Option3);
-            groupBox.Controls.Add(Option4);
-
+            AddLabelsAndRadioButtons(groupBox, shuffled);
             flowLayoutPanel1.Controls.Add(groupBox);
         }
         private void GenerateDynamicQuestions()
