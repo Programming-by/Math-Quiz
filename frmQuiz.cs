@@ -89,20 +89,18 @@ namespace Math_Quiz
         }
         private string GetOption(List<int> shuffled, RadioButton rbOption)
         {
-            foreach (var item in shuffled)
+            if (shuffled.Count > 0 && rbOption.Text == "")
             {
-                if (rbOption.Text == "")
+                int item = shuffled[0];
+                rbOption.Text = item.ToString();
+                shuffled.RemoveAt(0);
+                if (item == _QuestionInfo.CorrectAnswer)
                 {
-                    rbOption.Text = item.ToString();
-                    shuffled.Remove(item);
-                   
-                    if (item == _QuestionInfo.CorrectAnswer)
-                    {
-                        rbOption.Tag = "C";
-                    }
-                    return rbOption.Text;
+                    rbOption.Tag = "C";
                 }
+                return rbOption.Text;
             }
+
             return "";
         }
         private void GenerateQuestion()
