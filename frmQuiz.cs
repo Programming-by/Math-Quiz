@@ -208,9 +208,7 @@ namespace Math_Quiz
                     {
                         _QuestionInfo.QuizMark++;
                     }
-                }
-
-                if (item.Tag?.ToString() != "C" && item.Checked)
+                } else if (item.Checked)
                 {
                     item.BackColor = Color.Red;
                 }
