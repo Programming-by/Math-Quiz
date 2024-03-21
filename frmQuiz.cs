@@ -335,8 +335,12 @@ namespace Math_Quiz
             lblResult.Visible = true;
             QuizTimer.Stop();
             CalculateMarkAndChangeBackground(PossibleAnswers);
-            lblResult.Text = $"{_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions}";
-            MessageBox.Show($"you got {_QuestionInfo.QuizMark}/{_QuestionInfo.NumberOfQuestions},Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            int TotalQuestions = _QuestionInfo.NumberOfQuestions;
+            int CorrectAnswers = _QuestionInfo.QuizMark;
+
+            lblResult.Text = $"{CorrectAnswers}/{TotalQuestions}";
+            MessageBox.Show($"you got {CorrectAnswers}/{TotalQuestions},Well done!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
     }
