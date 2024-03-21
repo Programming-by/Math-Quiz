@@ -83,6 +83,7 @@
             // 
             // QuizTimer
             // 
+            this.QuizTimer.Interval = 1000;
             this.QuizTimer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // lblResultLabel

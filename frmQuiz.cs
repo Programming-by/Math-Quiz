@@ -23,7 +23,7 @@ namespace Math_Quiz
             public string Operation;
             public string OpType;
             public string Timer;
-            public double CorrectAnswer;
+            public int CorrectAnswer;
             public int QuizMark;
         }
         stQuestionInfo _QuestionInfo;
@@ -38,8 +38,7 @@ namespace Math_Quiz
             _QuestionInfo.Operation = QuestionData.Operation;
             _QuestionInfo.Timer = QuestionData.Timer;
         }
-
-        private double GetCorrectAnswer(double Number1, double Number2,string OpType)
+        private int GetCorrectAnswer(int Number1, int Number2,string OpType)
         {
             switch (OpType)
             {
@@ -57,44 +56,38 @@ namespace Math_Quiz
                     return Number1 + Number2;
             }
         }
-        private List<double> ShuffleList(List<double> options)
+        private List<int> ShuffleList(List<int> options)
         {
             //var shuffledList = options.OrderBy(x => Guid.NewGuid()).ToList();
             var shuffledList = options.OrderBy(x => random.Next()).ToList();
             return shuffledList;
         }
-        private List<double> GenerateQuestionOptions()
+        private List<int> GenerateQuestionOptions()
         {
-            List<double> options = new List<double>();
-            double NumberGenerated = 0;
-
-            options.Add(_QuestionInfo.CorrectAnswer);
-            while (true)
+            List<int> options = new List<int> 
             {
+             _QuestionInfo.CorrectAnswer
+            };
+         
+            while (options.Count < 4)
+            {
+                int NumberGenerated = 0;
+
                 if (_QuestionInfo.CorrectAnswer <= 0)
-                {
                     NumberGenerated = random.Next(-30, (int)_QuestionInfo.CorrectAnswer);
+                else
+                    NumberGenerated = random.Next(1, (int)_QuestionInfo.CorrectAnswer);
 
-                } else 
-                NumberGenerated = random.Next(1, (int)_QuestionInfo.CorrectAnswer);
 
-            
-                if (options.Contains(NumberGenerated))
-                {
-                    continue;
-                } else
+                if (!options.Contains(NumberGenerated))
                 {
                     options.Add(NumberGenerated);
                 }
-
-                if (options.Count == 4)
-                {
-                    break;
-                }
             }
+            
             return options;
         }
-        private string GetOption(List<double> shuffled, RadioButton rbOption)
+        private string GetOption(List<int> shuffled, RadioButton rbOption)
         {
             foreach (var item in shuffled)
             {
@@ -138,7 +131,7 @@ namespace Math_Quiz
          _QuestionInfo.Number1 = random.Next(min, max).ToString();
          _QuestionInfo.Number2 = random.Next(min, max).ToString();
          _QuestionInfo.OpType = GenerateOperation();
-         _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToDouble(_QuestionInfo.Number1), Convert.ToDouble(_QuestionInfo.Number2), _QuestionInfo.OpType);
+         _QuestionInfo.CorrectAnswer = GetCorrectAnswer(Convert.ToInt32(_QuestionInfo.Number1), Convert.ToInt32(_QuestionInfo.Number2), _QuestionInfo.OpType);
         }
         private string GetRandomOperation()
         {
