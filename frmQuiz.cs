@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Math_Quiz
@@ -296,12 +298,20 @@ namespace Math_Quiz
         {
             for (int i = 1; i <= _QuestionInfo.NumberOfQuestions; i++)
             {
-                AddControlsToFlowLayoutPanel(4);
+                Thread.Sleep(100);
+                this.Invoke((MethodInvoker)delegate
+                {
+                    AddControlsToFlowLayoutPanel(i);
+                });
             }
         }
-        private void frmQuiz_Load(object sender, EventArgs e)
+        private async void frmQuiz_Load(object sender, EventArgs e)
         {
-            GenerateDynamicQuestions();
+            await Task.Run(() =>
+            {
+                GenerateDynamicQuestions();
+            });
+
 
            GetQuizTime();
 
